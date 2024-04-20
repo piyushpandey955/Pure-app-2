@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>AQI Map</title>
+    <link rel="stylesheet" href="maps.css">
+
+    <style>
+      body {
+        background-color: #164a41;
+      }
+      #map {
+        height: 500px;
+      }
+
+     .city-display {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+     .aqi-display {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+     .aqi-value {
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+     .aqi-category {
+        font-size: 16px;
+      }
+
+     .error {
+        color: red;
+      }
+
+     .search-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+     .search-input {
+        padding: 5px 10px;
+        font-size: 16px;
+      }
+
+     .search-button {
+        padding: 5px 10px;
+        font-size: 16px;
+        background-color: #f1b248;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+     .search-button:hover {
+        background-color: #8e3e3e;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="search-box">
+      <input id="search-input" type="text" placeholder="Search city..." class="search-input" />
+      <button id="search-button" class="search-button">Search</button>
+    </div>
+    <div id="search-results"></div>
+    <div id="map"></div>
+    <footer>
+        <div class="container1">
+            <p>Resources</p>
+            <a href="#"><p>HOME</p></a>
+            <a href="#"><p>DASHBOARD</p></a>
+            <a href="#"><p>FAQS</p></a>
+        </div>        
+        <div class="container1">
+            <p>COMPANY</p>
+            <a href="#"><p>Countact Us</p></a>
+            <a href="#"><p>FAQ</p></a>
+            <a href="#"><p>T&C</p></a>
+        </div>        
+        <div class="container1">
+            <p>Keep In Touch</p>
+            <input type="text" placeholder="Enter your email address" id="emailField"/>
+  
+            <div class="social-icons">
+                <i class="fa-brands fa-facebook"></i>
+                <i class="fa-brands fa-twitter"></i>
+                <i class="fa-brands fa-square-instagram"></i>
+            </div>
+        </div>        
+        <div class="container1">
+            <div class="original">
+                <i class="fa-solid fa-certificate"></i>
+                <p>100% Real-Time Data guarantee at Pure Air !</p>
+            </div>
+            <div class="original">
+                <i class="fa-solid fa-calendar-days"></i>
+                <p>Keep Track Of Your Health and Breathe Well !</p>
+            </div>
+        </div>        
+  
+    </footer>
+      
+
+    <script>
+      const cityData = [
+        {
+          name: "Dhaka",
+          aqi: 32,
+          lat: 23.7514,
+          lng: 90.3676,
+          image: "https://example.com/dhaka.png",
+        },
+        {
+          name: "Khulna",
+          aqi: 55,
+          lat: 22.8336,
+          lng: 89.5806,
+          image: "https://example.com/khulna.png",
+        },
+        {
+          name: "Chittagong",
+          aqi: 62,
+          lat: 22.3365,
+          lng: 91.8205,
+          image: "https://example.com/chittagong.png",
+        },
+        {
+          name: "Mumbai",
+          aqi: 82,
+          lat: 19.0760,
+          lng: 72.8777,
+          image: "https://example.com/mumbai.png",
+        },
+        {
+          name: "Delhi",
+          aqi: 62,
+          lat: 28.7041,
+          lng: 77.1025,
+          image: "delhi.jpg",
+        },
+        {
+          name: "Kolkata",
+          aqi: 48,
+          lat: 22.5697,
+          lng: 88.3692,
+          image: "https://example.com/kolkata.png",
+        },
+        {
+          name: "Ghaziabad",
+          aqi: 209,
+          lat: 28.6653,
+          lng: 77.4391,
+          image: "2122.jpeg",
+        },
+        {
+          name: "Agra",
+          aqi: 44,
+          lat: 27.1750,
+          lng: 78.0085,
+          image: "https://example.com/kolkata.png",
+        },
+        {
+          name: "Pune",
+          aqi: 128,
+          lat: 18.5195,
+          lng:  73.8553,
+          image: "https://example.com/kolkata.png",
+        },
+        {
+          name: "Mumbai",
+          aqi: 128,
+          lat:  19.0728,
+          lng:  72.8826,
+          image: "https://example.com/kolkata.png",
+        },
+        {
+          name: "Sikkim",
+          aqi: 39,
+
+          lat: 27.5329,
+          lng:  88.5122,
+          image: "https://example.com/kolkata.png",
+        },
+
+
+      ];
+
+      let map;
+      let infowindow;
+      let markers = [];
+
+      function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), {
+          center: { lat: 23.7514, lng: 90.3676 },
+          zoom: 4,
+        });
+
+        infowindow = new google.maps.InfoWindow();
+
+        cityData.forEach((city) => {
+          const marker = new google.maps.Marker({
+            position: { lat: city.lat, lng: city.lng },
+            map: map,
+            title: city.name,
+          });
+
+          marker.addListener("click", () => {
+            infowindow.setContent(
+              `<div class="city-display">
+                <h3>${city.name}</h3>
+                <div class="aqi-display">
+                  <div class="aqi-value">AQI: ${city.aqi}</div>
+                  <div class="aqi-category">Category: Good</div>
+                </div>
+              </div>`
+            );
+            infowindow.open(map, marker);
+          });
+
+          markers.push(marker);
+        });
+      }
+
+      const searchButton = document.getElementById("search-button");
+      searchButton.addEventListener("click", () => {
+        const searchInput = document.getElementById("search-input");
+        const searchQuery = searchInput.value.trim().toLowerCase();
+
+        if (!searchQuery) {
+          return;
+        }
+
+        const matchingCity = cityData.find(
+          (city) => city.name.toLowerCase() === searchQuery
+        );
+
+        if (!matchingCity) {
+          document.getElementById("search-results").innerHTML =
+            "<div class='error'>City not found.</div>";
+          return;
+        }
+
+        map.setCenter({ lat: matchingCity.lat, lng: matchingCity.lng });
+        map.setZoom(8);
+
+        markers.forEach((marker) => {
+          if (marker.getTitle() === matchingCity.name) {
+            marker.setAnimation(google.maps.Animation.BOUNCE);
+            setTimeout(() => {
+              marker.setAnimation(null);
+            }, 2000);
+          }
+        });
+      });
+    </script>
+    <script async
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4HLp5T-xCSLrgGWcjeeQUI1pjKSSMPCk&callback=initMap">
+    </script>
+  </body>
+</html>
